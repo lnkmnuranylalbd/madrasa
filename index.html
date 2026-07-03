@@ -14,7 +14,6 @@
   import { getAuth, RecaptchaVerifier, signInWithPhoneNumber, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
   import { getFirestore, collection, addDoc, getDocs, doc, setDoc, getDoc, deleteDoc } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
-  // তোমার Firebase Config
   const firebaseConfig = {
     apiKey: "AIzaSyBenny62B8sHCG8FlY-aAfv7eJUePkfQZs",
     authDomain: "nurani-madrasa.firebaseapp.com",
@@ -31,7 +30,7 @@
   // এডমিন মোবাইল নাম্বার - এখানে তোমার নাম্বার দাও +880 সহ
   const ADMIN_PHONE = "+8801714692986";
 
-  window.firebaseApp = { auth, db, RecaptchaVerifier, signInWithPhoneNumber, onAuthStateChanged, signOut, collection, addDoc, getDocs, doc, setDoc, getDoc, deleteDoc, ADMIN_PHONE };
+  window.firebaseApp = { auth, RecaptchaVerifier, signInWithPhoneNumber, onAuthStateChanged, signOut, ADMIN_PHONE };
 </script>
 
 <style>
@@ -47,22 +46,18 @@
 html {scroll-behavior: smooth; scroll-padding-top: 140px;}
 body {font-family: 'Noto Sans Bengali', sans-serif; background: #f5f7fa; color: #212121; line-height: 1.6;}
 .container {max-width: 1200px; margin: 0 auto; padding: 0 16px;}
-/* Header */
 .header {background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000;}
 .header-top {padding: 12px 0; display: flex; align-items: center; justify-content: center; gap: 12px;}
 .logo {width: 45px; height: 45px;}
 .school-name {font-size: 18px; font-weight: 700; color: var(--primary-green); text-align: center;}
 @media (min-width: 768px) {.school-name {font-size: 24px;}}
-/* Menu */
 .nav {background: var(--primary-green); padding: 8px 0; position: sticky; top: 69px; z-index: 999;}
 .nav-menu {display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; list-style: none;}
 .nav-menu a {color: white; text-decoration: none; padding: 8px 16px; border-radius: 20px; font-weight: 500; transition: all 0.3s;}
 .nav-menu a:hover,.nav-menu a.active {background: rgba(255,255,255,0.2);}
-/* Section */
 .section {padding: 24px 0; display: none;}
 .section.active {display: block;}
 .section-header {background: var(--primary-blue); color: white; padding: 16px; border-radius: var(--radius); margin-bottom: 20px; text-align: center; font-size: 22px; font-weight: 700;}
-/* Cards & Buttons */
 .card {background: white; border-radius: var(--radius); padding: 20px; margin-bottom: 16px; box-shadow: var(--card-shadow); border-left: 4px solid var(--primary-blue);}
 .btn {display: inline-block; background: var(--primary-green); color: white; padding: 12px 24px; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; text-decoration: none; transition: all 0.3s; font-family: 'Noto Sans Bengali';}
 .btn:hover {opacity: 0.9; transform: translateY(-2px);}
@@ -70,16 +65,13 @@ body {font-family: 'Noto Sans Bengali', sans-serif; background: #f5f7fa; color: 
 .btn-gray {background: var(--gray-btn);}
 .btn-orange {background: var(--orange);}
 .btn-block {display: block; width: 100%; text-align: center; margin: 8px 0;}
-/* Grid */
 .grid {display: grid; gap: 16px;}
 @media (min-width: 768px) {.grid-2 {grid-template-columns: repeat(2, 1fr);}}
 @media (min-width: 1024px) {.grid-3 {grid-template-columns: repeat(3, 1fr);}}
-/* Form */
 .form-group {margin-bottom: 16px;}
 .form-group label {display: block; margin-bottom: 6px; font-weight: 600; color: #424242;}
 .form-group input,.form-group select {width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 16px; font-family: 'Noto Sans Bengali';}
 .form-group input:focus,.form-group select:focus {outline: none; border-color: var(--primary-green);}
-/* Library */
 .search-box {width: 100%; padding: 12px 16px; border: 2px solid #e0e0e0; border-radius: 25px; margin-bottom: 16px; font-size: 16px;}
 .filter-btns {display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px;}
 .filter-btn {padding: 8px 16px; border: 2px solid var(--primary-green); background: white; color: var(--primary-green); border-radius: 20px; cursor: pointer;}
@@ -87,7 +79,6 @@ body {font-family: 'Noto Sans Bengali', sans-serif; background: #f5f7fa; color: 
 .book-card {text-align: center;}
 .book-title {font-weight: 700; margin: 8px 0 4px;}
 .book-author {color: #666; font-size: 14px; margin-bottom: 12px;}
-/* Utility */
 .hidden {display: none!important;}
 .text-center {text-align: center;}
 .mt-2 {margin-top: 16px;}
@@ -96,7 +87,6 @@ body {font-family: 'Noto Sans Bengali', sans-serif; background: #f5f7fa; color: 
 </style>
 </head>
 <body>
-<!-- Header -->
 <header class="header">
   <div class="container">
     <div class="header-top">
@@ -126,7 +116,6 @@ body {font-family: 'Noto Sans Bengali', sans-serif; background: #f5f7fa; color: 
 </header>
 
 <main class="container">
-  <!-- Home -->
   <section id="home" class="section active">
     <div class="section-header">স্বাগতম</div>
     <div class="card text-center">
@@ -135,13 +124,11 @@ body {font-family: 'Noto Sans Bengali', sans-serif; background: #f5f7fa; color: 
     </div>
   </section>
 
-  <!-- Notice -->
   <section id="notice" class="section">
     <div class="section-header">নোটিশ বোর্ড</div>
     <div id="noticeList"></div>
   </section>
 
-  <!-- Routine -->
   <section id="routine" class="section">
     <div class="section-header">রুটিন</div>
     <button class="btn btn-block" onclick="showRoutine('exam')">📅 পরীক্ষার রুটিন</button>
@@ -164,7 +151,6 @@ body {font-family: 'Noto Sans Bengali', sans-serif; background: #f5f7fa; color: 
     </div>
   </section>
 
-  <!-- Syllabus -->
   <section id="syllabus" class="section">
     <div class="section-header">সিলেবাস</div>
     <button class="btn btn-block" onclick="showClassList('syllabus')">শ্রেণী নির্বাচন করুন ▼</button>
@@ -172,7 +158,6 @@ body {font-family: 'Noto Sans Bengali', sans-serif; background: #f5f7fa; color: 
     <div id="syllabusSubjects" class="hidden mt-2"></div>
   </section>
 
-  <!-- Paramarsha -->
   <section id="paramarsha" class="section">
     <div class="section-header">পরামর্শ</div>
     <button class="btn btn-block" onclick="showClassList('paramarsha')">শ্রেণী নির্বাচন করুন ▼</button>
@@ -180,7 +165,6 @@ body {font-family: 'Noto Sans Bengali', sans-serif; background: #f5f7fa; color: 
     <div id="paramarshaSubjects" class="hidden mt-2"></div>
   </section>
 
-  <!-- Result -->
   <section id="result" class="section">
     <div class="section-header">ফলাফল</div>
     <div class="card">
@@ -212,7 +196,6 @@ body {font-family: 'Noto Sans Bengali', sans-serif; background: #f5f7fa; color: 
     <div id="resultDisplay" class="hidden"></div>
   </section>
 
-  <!-- Library -->
   <section id="library" class="section">
     <div class="section-header">লাইব্রেরি</div>
     <input type="text" class="search-box" id="bookSearch" placeholder="বই খুঁজুন..." onkeyup="filterBooks()">
@@ -226,7 +209,6 @@ body {font-family: 'Noto Sans Bengali', sans-serif; background: #f5f7fa; color: 
     <div id="bookGrid" class="grid grid-2 grid-3"></div>
   </section>
 
-  <!-- Login -->
   <section id="login" class="section">
     <div class="section-header">লগইন / রেজিস্ট্রেশন</div>
     <div class="card" id="loginForm">
@@ -262,7 +244,6 @@ body {font-family: 'Noto Sans Bengali', sans-serif; background: #f5f7fa; color: 
     </div>
   </section>
 
-  <!-- Admin Panel - Firebase Secured -->
   <section id="admin" class="section">
     <div class="section-header">এডমিন প্যানেল - Firebase সিকিউর</div>
     <div class="card" id="adminLogin">
@@ -287,7 +268,7 @@ body {font-family: 'Noto Sans Bengali', sans-serif; background: #f5f7fa; color: 
 
     <div class="hidden" id="adminPanel">
       <div class="card">
-        <div class="flex justify-between items-center mb-4">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
           <h3 style="color:var(--primary-green);">✅ Firebase সিকিউর এডমিন</h3>
           <button class="btn btn-gray" onclick="adminLogout()">লগআউট</button>
         </div>
@@ -305,19 +286,15 @@ body {font-family: 'Noto Sans Bengali', sans-serif; background: #f5f7fa; color: 
   <p><a href="#admin" onclick="showSection('admin')" style="color:#999;">এডমিন</a></p>
 </footer>
 
-<script type="module">
-// ডেটা
+<script>
+// সব ফাংশন window তে বসিয়ে দিলাম যাতে onclick কাজ করে
 const classes = {shishu: 'শিশু শ্রেণী', class1: 'প্রথম শ্রেণী', class2: 'দ্বিতীয় শ্রেণী', class3: 'তৃতীয় শ্রেণী'};
 const subjects = ['কোরআন মাজীদ ও তাজবীদ', 'কালিমা ও মাসায়েল', 'হাদিস শরীফ ও আসমাউল হুসনা', 'আদঃ মাসনুনাহ ও আদঃ সলাত', 'আরবি লেখা', 'ভূগোল সমাজ', 'বাংলা', 'ইংরেজি', 'গণিত', 'ইসলাম শিক্ষা'];
 const days = ['শনিবার', 'রবিবার', 'সোমবার', 'মঙ্গলবার', 'বুধবার', 'বৃহস্পতিবার'];
 let currentUser = null;
-
-// Firebase
-const { auth, RecaptchaVerifier, signInWithPhoneNumber, onAuthStateChanged, signOut, ADMIN_PHONE } = window.firebaseApp;
 let confirmationResult;
 let recaptchaVerifier;
 
-// ডেমো ডেটা
 const demoNotices = [
   {date: '২০ নভেম্বর, ২০২৪', title: 'বার্ষিক পরীক্ষা ২০২৪ এর রুটিন প্রকাশ', content: 'এতদ্বারা সকল ছাত্রছাত্রীদের জানানো যাচ্ছে যে, বার্ষিক পরীক্ষা ২০২৪ আগামী ১৫ ডিসেম্বর থেকে শুরু হবে।'},
   {date: '১৫ নভেম্বর, ২০২৪', title: 'ভর্তি কার্যক্রম ২০২৫', content: '২০২৫ শিক্ষাবর্ষে ভর্তি কার্যক্রম শুরু হয়েছে। বিস্তারিত অফিসে যোগাযোগ করুন।'}
@@ -342,7 +319,7 @@ document.querySelectorAll('.nav-link').forEach(link => {
   });
 });
 
-function showSection(id) {
+window.showSection = function(id) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   window.scrollTo(0, 0);
@@ -350,11 +327,13 @@ function showSection(id) {
 
 // Firebase reCAPTCHA
 window.addEventListener('load', () => {
+  const { auth, RecaptchaVerifier } = window.firebaseApp;
   recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', { 'size': 'normal' });
 });
 
 // Admin Firebase Login
-window.sendAdminOTP = async () => {
+window.sendAdminOTP = async function() {
+  const { auth, signInWithPhoneNumber, ADMIN_PHONE } = window.firebaseApp;
   const phone = document.getElementById('adminPhone').value;
   const msg = document.getElementById('admin-login-msg');
   if (phone!== ADMIN_PHONE) {
@@ -363,6 +342,7 @@ window.sendAdminOTP = async () => {
   }
   try {
     msg.innerText = 'OTP পাঠানো হচ্ছে...';
+    msg.style.color = 'blue';
     confirmationResult = await signInWithPhoneNumber(auth, phone, recaptchaVerifier);
     document.getElementById('admin-step-1').classList.add('hidden');
     document.getElementById('admin-step-2').classList.remove('hidden');
@@ -371,11 +351,10 @@ window.sendAdminOTP = async () => {
   } catch (error) {
     msg.innerText = 'OTP পাঠানো যায়নি: ' + error.message;
     msg.style.color = 'red';
-    console.error(error);
   }
 }
 
-window.verifyAdminOTP = async () => {
+window.verifyAdminOTP = async function() {
   const code = document.getElementById('adminOtpCode').value;
   const msg = document.getElementById('admin-login-msg');
   try {
@@ -388,6 +367,13 @@ window.verifyAdminOTP = async () => {
   }
 }
 
+window.adminLogout = function() {
+  const { auth, signOut } = window.firebaseApp;
+  signOut(auth);
+}
+
+// Firebase Auth State
+const { auth, onAuthStateChanged, ADMIN_PHONE } = window.firebaseApp;
 onAuthStateChanged(auth, (user) => {
   if (user && user.phoneNumber === ADMIN_PHONE) {
     document.getElementById('adminLogin').classList.add('hidden');
@@ -398,10 +384,8 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
-window.adminLogout = () => signOut(auth);
-
-// বাকি সব ফাংশন আগের মতই
-function loadNotices() {
+// বাকি সব ফাংশন
+window.loadNotices = function() {
   const html = demoNotices.map(n => `
     <div class="card">
       <small style="color:#666;">${n.date}</small>
@@ -412,7 +396,7 @@ function loadNotices() {
   document.getElementById('noticeList').innerHTML = html;
 }
 
-function showRoutine(type) {
+window.showRoutine = function(type) {
   document.getElementById('examRoutine').classList.add('hidden');
   document.getElementById('classRoutine').classList.add('hidden');
   if (type === 'exam') document.getElementById('examRoutine').classList.remove('hidden');
@@ -430,12 +414,13 @@ function showRoutine(type) {
     document.getElementById('classRoutineDays').innerHTML = daysHtml;
   }
 }
-function hideRoutine() {
+
+window.hideRoutine = function() {
   document.getElementById('examRoutine').classList.add('hidden');
   document.getElementById('classRoutine').classList.add('hidden');
 }
 
-function showClassList(type) {
+window.showClassList = function(type) {
   const container = document.getElementById(type + 'ClassList');
   const html = Object.entries(classes).map(([key, name]) => `
     <button class="btn btn-block" onclick="showSubjects('${type}', '${key}', '${name}')">👶 ${name}</button>
@@ -445,7 +430,7 @@ function showClassList(type) {
   document.getElementById(type + 'Subjects').classList.add('hidden');
 }
 
-function showSubjects(type, classKey, className) {
+window.showSubjects = function(type, classKey, className) {
   const container = document.getElementById(type + 'Subjects');
   const title = type === 'syllabus'? 'সিলেবাস' : 'পরামর্শ';
   const html = `
@@ -462,7 +447,7 @@ function showSubjects(type, classKey, className) {
   container.classList.remove('hidden');
 }
 
-function showResult() {
+window.showResult = function() {
   const cls = document.getElementById('resultClass').value;
   const exam = document.getElementById('examName').value;
   const roll = document.getElementById('rollNumber').value;
@@ -480,4 +465,79 @@ function showResult() {
         <tr><td style="padding:8px;border:1px solid #ddd;">গণিত</td><td style="padding:8px;border:1px solid #ddd;text-align:center;">92</td></tr>
         <tr style="background:#e8f5e9;font-weight:700;"><td style="padding:8px;border:1px solid #ddd;">মোট</td><td style="padding:8px;border:1px solid #ddd;text-align:center;">275</td></tr>
       </table>
-      <button class="btn btn-blue
+      <button class="btn btn-blue btn-block" onclick="alert('মার্কশিট PDF ডাউনলোড হবে')">⬇ মার্কশিট ডাউনলোড</button>
+    </div>
+  `;
+  document.getElementById('resultDisplay').innerHTML = html;
+  document.getElementById('resultDisplay').classList.remove('hidden');
+}
+
+window.resetResult = function() {
+  document.getElementById('resultClass').value = '';
+  document.getElementById('examName').value = '';
+  document.getElementById('rollNumber').value = '';
+  document.getElementById('resultDisplay').classList.add('hidden');
+}
+
+window.loadBooks = function() {
+  const html = demoBooks.map(b => `
+    <div class="card book-card">
+      <div style="font-size:48px;">📚</div>
+      <div class="book-title">${b.title}</div>
+      <div class="book-author">লেখক: ${b.author}</div>
+      <button class="btn btn-block" onclick="alert('${b.title} ডাউনলোড হবে')">⬇ ডাউনলোড</button>
+    </div>
+  `).join('');
+  document.getElementById('bookGrid').innerHTML = html;
+}
+
+window.filterBooks = function() {
+  const search = document.getElementById('bookSearch').value.toLowerCase();
+  const cards = document.querySelectorAll('.book-card');
+  cards.forEach(card => {
+    const title = card.querySelector('.book-title').textContent.toLowerCase();
+    card.style.display = title.includes(search)? 'block' : 'none';
+  });
+}
+
+window.filterCategory = function(cat) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  const cards = document.querySelectorAll('.book-card');
+  cards.forEach((card, i) => {
+    if (cat === 'all' || demoBooks[i].category === cat) card.style.display = 'block';
+    else card.style.display = 'none';
+  });
+}
+
+window.showRegister = function() {
+  document.getElementById('loginForm').classList.add('hidden');
+  document.getElementById('registerForm').classList.remove('hidden');
+}
+
+window.showLogin = function() {
+  document.getElementById('registerForm').classList.add('hidden');
+  document.getElementById('loginForm').classList.remove('hidden');
+}
+
+window.register = function() {
+  const mobile = document.getElementById('regMobile').value;
+  if (!mobile || mobile.length!== 11) return alert('সঠিক মোবাইল নাম্বার দিন');
+  alert('ডেমো: রেজিস্ট্রেশন সফল! OTP যাচাই হবে');
+  showLogin();
+}
+
+window.login = function() {
+  const mobile = document.getElementById('loginMobile').value;
+  if (!mobile) return alert('মোবাইল নাম্বার দিন');
+  alert('ডেমো: লগইন সফল!');
+  currentUser = mobile;
+  document.getElementById('loginMenuBtn').textContent = 'প্রোফাইল';
+}
+
+// ইনিট
+loadNotices();
+loadBooks();
+</script>
+</body>
+</html>
