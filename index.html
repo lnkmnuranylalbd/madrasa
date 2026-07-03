@@ -8,11 +8,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-<!-- Firebase SDK -->
 <script type="module">
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
   import { getAuth, RecaptchaVerifier, signInWithPhoneNumber, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
-  import { getFirestore, collection, addDoc, getDocs, doc, setDoc, getDoc, deleteDoc } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
   const firebaseConfig = {
     apiKey: "AIzaSyBenny62B8sHCG8FlY-aAfv7eJUePkfQZs",
@@ -25,10 +23,7 @@
 
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
-  const db = getFirestore(app);
-
-  // এডমিন মোবাইল নাম্বার - এখানে তোমার নাম্বার দাও +880 সহ
-  const ADMIN_PHONE = "+8801714692986";
+  const ADMIN_PHONE = "+8801714692986"; // এখানে তোমার নাম্বার দাও
 
   window.firebaseApp = { auth, RecaptchaVerifier, signInWithPhoneNumber, onAuthStateChanged, signOut, ADMIN_PHONE };
 </script>
@@ -133,15 +128,12 @@ body {font-family: 'Noto Sans Bengali', sans-serif; background: #f5f7fa; color: 
     <div class="section-header">রুটিন</div>
     <button class="btn btn-block" onclick="showRoutine('exam')">📅 পরীক্ষার রুটিন</button>
     <button class="btn btn-block" onclick="showRoutine('class')">📚 ক্লাস রুটিন</button>
-
     <div id="examRoutine" class="hidden mt-2">
       <div class="card">
         <h3 style="text-align:center; margin-bottom:16px;">পরীক্ষার রুটিন</h3>
         <button class="btn btn-blue btn-block" onclick="alert('ডেমো: পরীক্ষার রুটিন PDF ডাউনলোড হবে')">⬇ পরীক্ষার রুটিন ডাউনলোড করুন</button>
         <button class="btn btn-gray btn-block mt-2" onclick="hideRoutine()">← পিছনে যান</button>
       </div>
-    </div>
-
     <div id="classRoutine" class="hidden mt-2">
       <div class="card">
         <h3 style="text-align:center; margin-bottom:16px;">ক্লাস রুটিন</h3>
@@ -200,11 +192,11 @@ body {font-family: 'Noto Sans Bengali', sans-serif; background: #f5f7fa; color: 
     <div class="section-header">লাইব্রেরি</div>
     <input type="text" class="search-box" id="bookSearch" placeholder="বই খুঁজুন..." onkeyup="filterBooks()">
     <div class="filter-btns">
-      <button class="filter-btn active" onclick="filterCategory('all')">সব</button>
-      <button class="filter-btn" onclick="filterCategory('quran')">কোরআন</button>
-      <button class="filter-btn" onclick="filterCategory('hadis')">হাদিস</button>
-      <button class="filter-btn" onclick="filterCategory('fiqh')">ফিকহ</button>
-      <button class="filter-btn" onclick="filterCategory('story')">গল্প</button>
+      <button class="filter-btn active" onclick="filterCategory('all', this)">সব</button>
+      <button class="filter-btn" onclick="filterCategory('quran', this)">কোরআন</button>
+      <button class="filter-btn" onclick="filterCategory('hadis', this)">হাদিস</button>
+      <button class="filter-btn" onclick="filterCategory('fiqh', this)">ফিকহ</button>
+      <button class="filter-btn" onclick="filterCategory('story', this)">গল্প</button>
     </div>
     <div id="bookGrid" class="grid grid-2 grid-3"></div>
   </section>
@@ -223,7 +215,6 @@ body {font-family: 'Noto Sans Bengali', sans-serif; background: #f5f7fa; color: 
       <button class="btn btn-block" onclick="login()">লগইন</button>
       <p class="text-center mt-2">একাউন্ট নেই? <a href="#" onclick="showRegister()" style="color:var(--primary-green);font-weight:600;">রেজিস্ট্রেশন করুন</a></p>
     </div>
-
     <div class="card hidden" id="registerForm">
       <div class="form-group"><label>নাম</label><input type="text" id="regName" placeholder="পূর্ণ নাম"></div>
       <div class="form-group"><label>রোল</label><input type="number" id="regRoll" placeholder="রোল নম্বর"></div>
@@ -265,7 +256,6 @@ body {font-family: 'Noto Sans Bengali', sans-serif; background: #f5f7fa; color: 
       </div>
       <p id="admin-login-msg" class="text-center mt-2" style="color:red;"></p>
     </div>
-
     <div class="hidden" id="adminPanel">
       <div class="card">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
@@ -287,7 +277,6 @@ body {font-family: 'Noto Sans Bengali', sans-serif; background: #f5f7fa; color: 
 </footer>
 
 <script>
-// সব ফাংশন window তে বসিয়ে দিলাম যাতে onclick কাজ করে
 const classes = {shishu: 'শিশু শ্রেণী', class1: 'প্রথম শ্রেণী', class2: 'দ্বিতীয় শ্রেণী', class3: 'তৃতীয় শ্রেণী'};
 const subjects = ['কোরআন মাজীদ ও তাজবীদ', 'কালিমা ও মাসায়েল', 'হাদিস শরীফ ও আসমাউল হুসনা', 'আদঃ মাসনুনাহ ও আদঃ সলাত', 'আরবি লেখা', 'ভূগোল সমাজ', 'বাংলা', 'ইংরেজি', 'গণিত', 'ইসলাম শিক্ষা'];
 const days = ['শনিবার', 'রবিবার', 'সোমবার', 'মঙ্গলবার', 'বুধবার', 'বৃহস্পতিবার'];
@@ -308,34 +297,32 @@ const demoBooks = [
   {title: 'ছোটদের গল্প', author: 'নজরুল ইসলাম', category: 'story'}
 ];
 
-// নেভিগেশন
+// সব ফাংশন window তে বসালাম
+window.showSection = function(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+  document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+  document.querySelector(`[href="#${id}"]`).classList.add('active');
+}
+
 document.querySelectorAll('.nav-link').forEach(link => {
   link.addEventListener('click', (e) => {
     e.preventDefault();
     const target = link.getAttribute('href').substring(1);
     showSection(target);
-    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-    link.classList.add('active');
   });
 });
 
-window.showSection = function(id) {
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  window.scrollTo(0, 0);
-}
-
-// Firebase reCAPTCHA
-window.addEventListener('load', () => {
-  const { auth, RecaptchaVerifier } = window.firebaseApp;
-  recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', { 'size': 'normal' });
-});
-
-// Admin Firebase Login
 window.sendAdminOTP = async function() {
-  const { auth, signInWithPhoneNumber, ADMIN_PHONE } = window.firebaseApp;
+  const { auth, RecaptchaVerifier, signInWithPhoneNumber, ADMIN_PHONE } = window.firebaseApp;
   const phone = document.getElementById('adminPhone').value;
   const msg = document.getElementById('admin-login-msg');
+  
+  if (!recaptchaVerifier) {
+    recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', { 'size': 'normal' });
+  }
+  
   if (phone!== ADMIN_PHONE) {
     msg.innerText = 'এই নাম্বার এডমিন না';
     return;
@@ -351,6 +338,7 @@ window.sendAdminOTP = async function() {
   } catch (error) {
     msg.innerText = 'OTP পাঠানো যায়নি: ' + error.message;
     msg.style.color = 'red';
+    recaptchaVerifier.render().then(widgetId => grecaptcha.reset(widgetId));
   }
 }
 
@@ -370,9 +358,11 @@ window.verifyAdminOTP = async function() {
 window.adminLogout = function() {
   const { auth, signOut } = window.firebaseApp;
   signOut(auth);
+  document.getElementById('admin-step-1').classList.remove('hidden');
+  document.getElementById('admin-step-2').classList.add('hidden');
+  document.getElementById('adminOtpCode').value = '';
 }
 
-// Firebase Auth State
 const { auth, onAuthStateChanged, ADMIN_PHONE } = window.firebaseApp;
 onAuthStateChanged(auth, (user) => {
   if (user && user.phoneNumber === ADMIN_PHONE) {
@@ -384,7 +374,6 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
-// বাকি সব ফাংশন
 window.loadNotices = function() {
   const html = demoNotices.map(n => `
     <div class="card">
@@ -481,7 +470,7 @@ window.resetResult = function() {
 
 window.loadBooks = function() {
   const html = demoBooks.map(b => `
-    <div class="card book-card">
+    <div class="card book-card" data-category="${b.category}">
       <div style="font-size:48px;">📚</div>
       <div class="book-title">${b.title}</div>
       <div class="book-author">লেখক: ${b.author}</div>
@@ -500,12 +489,12 @@ window.filterBooks = function() {
   });
 }
 
-window.filterCategory = function(cat) {
+window.filterCategory = function(cat, btn) {
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  event.target.classList.add('active');
+  btn.classList.add('active');
   const cards = document.querySelectorAll('.book-card');
-  cards.forEach((card, i) => {
-    if (cat === 'all' || demoBooks[i].category === cat) card.style.display = 'block';
+  cards.forEach(card => {
+    if (cat === 'all' || card.dataset.category === cat) card.style.display = 'block';
     else card.style.display = 'none';
   });
 }
