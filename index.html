@@ -7,6 +7,27 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+  import { getAuth, RecaptchaVerifier, signInWithPhoneNumber, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBenny62B8sHCG8FlY-aAfv7eJUePkfQZs",
+    authDomain: "nurani-madrasa.firebaseapp.com",
+    projectId: "nurani-madrasa",
+    storageBucket: "nurani-madrasa.firebasestorage.app",
+    messagingSenderId: "520630157445",
+    appId: "1:520630157445:web:99f63ad70c1a97b6dd69ec"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const ADMIN_PHONE = "+8801712345678"; // এখানে তোমার নাম্বার দাও
+
+  window.firebaseApp = { auth, RecaptchaVerifier, signInWithPhoneNumber, onAuthStateChanged, signOut, ADMIN_PHONE };
+</script>
+
 <style>
 :root {
   --primary-green: #2e7d32;
@@ -20,22 +41,18 @@
 html {scroll-behavior: smooth; scroll-padding-top: 140px;}
 body {font-family: 'Noto Sans Bengali', sans-serif; background: #f5f7fa; color: #212121; line-height: 1.6;}
 .container {max-width: 1200px; margin: 0 auto; padding: 0 16px;}
-/* Header */
 .header {background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000;}
 .header-top {padding: 12px 0; display: flex; align-items: center; justify-content: center; gap: 12px;}
 .logo {width: 45px; height: 45px;}
 .school-name {font-size: 18px; font-weight: 700; color: var(--primary-green); text-align: center;}
 @media (min-width: 768px) {.school-name {font-size: 24px;}}
-/* Menu */
 .nav {background: var(--primary-green); padding: 8px 0; position: sticky; top: 69px; z-index: 999;}
 .nav-menu {display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; list-style: none;}
 .nav-menu a {color: white; text-decoration: none; padding: 8px 16px; border-radius: 20px; font-weight: 500; transition: all 0.3s;}
 .nav-menu a:hover,.nav-menu a.active {background: rgba(255,255,255,0.2);}
-/* Section */
 .section {padding: 24px 0; display: none;}
 .section.active {display: block;}
 .section-header {background: var(--primary-blue); color: white; padding: 16px; border-radius: var(--radius); margin-bottom: 20px; text-align: center; font-size: 22px; font-weight: 700;}
-/* Cards & Buttons */
 .card {background: white; border-radius: var(--radius); padding: 20px; margin-bottom: 16px; box-shadow: var(--card-shadow); border-left: 4px solid var(--primary-blue);}
 .btn {display: inline-block; background: var(--primary-green); color: white; padding: 12px 24px; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; text-decoration: none; transition: all 0.3s; font-family: 'Noto Sans Bengali';}
 .btn:hover {opacity: 0.9; transform: translateY(-2px);}
@@ -43,16 +60,13 @@ body {font-family: 'Noto Sans Bengali', sans-serif; background: #f5f7fa; color: 
 .btn-gray {background: var(--gray-btn);}
 .btn-orange {background: var(--orange);}
 .btn-block {display: block; width: 100%; text-align: center; margin: 8px 0;}
-/* Grid */
 .grid {display: grid; gap: 16px;}
 @media (min-width: 768px) {.grid-2 {grid-template-columns: repeat(2, 1fr);}}
 @media (min-width: 1024px) {.grid-3 {grid-template-columns: repeat(3, 1fr);}}
-/* Form */
 .form-group {margin-bottom: 16px;}
 .form-group label {display: block; margin-bottom: 6px; font-weight: 600; color: #424242;}
 .form-group input,.form-group select {width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 16px; font-family: 'Noto Sans Bengali';}
 .form-group input:focus,.form-group select:focus {outline: none; border-color: var(--primary-green);}
-/* Library */
 .search-box {width: 100%; padding: 12px 16px; border: 2px solid #e0e0e0; border-radius: 25px; margin-bottom: 16px; font-size: 16px;}
 .filter-btns {display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px;}
 .filter-btn {padding: 8px 16px; border: 2px solid var(--primary-green); background: white; color: var(--primary-green); border-radius: 20px; cursor: pointer;}
@@ -60,16 +74,15 @@ body {font-family: 'Noto Sans Bengali', sans-serif; background: #f5f7fa; color: 
 .book-card {text-align: center;}
 .book-title {font-weight: 700; margin: 8px 0 4px;}
 .book-author {color: #666; font-size: 14px; margin-bottom: 12px;}
-/* Utility */
 .hidden {display: none!important;}
 .text-center {text-align: center;}
 .mt-2 {margin-top: 16px;}
 .list-item {padding: 12px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;}
 .list-item:last-child {border-bottom: none;}
+#recaptcha-container {margin: 10px 0;}
 </style>
 </head>
 <body>
-<!-- Header -->
 <header class="header">
   <div class="container">
     <div class="header-top">
@@ -99,7 +112,6 @@ body {font-family: 'Noto Sans Bengali', sans-serif; background: #f5f7fa; color: 
 </header>
 
 <main class="container">
-  <!-- Home -->
   <section id="home" class="section active">
     <div class="section-header">স্বাগতম</div>
     <div class="card text-center">
@@ -108,26 +120,22 @@ body {font-family: 'Noto Sans Bengali', sans-serif; background: #f5f7fa; color: 
     </div>
   </section>
 
-  <!-- Notice -->
   <section id="notice" class="section">
     <div class="section-header">নোটিশ বোর্ড</div>
     <div id="noticeList"></div>
   </section>
 
-  <!-- Routine -->
   <section id="routine" class="section">
     <div class="section-header">রুটিন</div>
     <button class="btn btn-block" onclick="showRoutine('exam')">📅 পরীক্ষার রুটিন</button>
     <button class="btn btn-block" onclick="showRoutine('class')">📚 ক্লাস রুটিন</button>
-    
     <div id="examRoutine" class="hidden mt-2">
       <div class="card">
         <h3 style="text-align:center; margin-bottom:16px;">পরীক্ষার রুটিন</h3>
-        <button class="btn btn-blue btn-block" onclick="alert('ডেমো: পরীক্ষার রুটিন PDF ডাউনলোড হবে')">⬇️ পরীক্ষার রুটিন ডাউনলোড করুন</button>
+        <button class="btn btn-blue btn-block" onclick="alert('ডেমো: পরীক্ষার রুটিন PDF ডাউনলোড হবে')">⬇ পরীক্ষার রুটিন ডাউনলোড করুন</button>
         <button class="btn btn-gray btn-block mt-2" onclick="hideRoutine()">← পিছনে যান</button>
       </div>
     </div>
-
     <div id="classRoutine" class="hidden mt-2">
       <div class="card">
         <h3 style="text-align:center; margin-bottom:16px;">ক্লাস রুটিন</h3>
@@ -137,7 +145,6 @@ body {font-family: 'Noto Sans Bengali', sans-serif; background: #f5f7fa; color: 
     </div>
   </section>
 
-  <!-- Syllabus -->
   <section id="syllabus" class="section">
     <div class="section-header">সিলেবাস</div>
     <button class="btn btn-block" onclick="showClassList('syllabus')">শ্রেণী নির্বাচন করুন ▼</button>
@@ -145,7 +152,6 @@ body {font-family: 'Noto Sans Bengali', sans-serif; background: #f5f7fa; color: 
     <div id="syllabusSubjects" class="hidden mt-2"></div>
   </section>
 
-  <!-- Paramarsha -->
   <section id="paramarsha" class="section">
     <div class="section-header">পরামর্শ</div>
     <button class="btn btn-block" onclick="showClassList('paramarsha')">শ্রেণী নির্বাচন করুন ▼</button>
@@ -153,7 +159,6 @@ body {font-family: 'Noto Sans Bengali', sans-serif; background: #f5f7fa; color: 
     <div id="paramarshaSubjects" class="hidden mt-2"></div>
   </section>
 
-  <!-- Result -->
   <section id="result" class="section">
     <div class="section-header">ফলাফল</div>
     <div class="card">
@@ -185,21 +190,19 @@ body {font-family: 'Noto Sans Bengali', sans-serif; background: #f5f7fa; color: 
     <div id="resultDisplay" class="hidden"></div>
   </section>
 
-  <!-- Library -->
   <section id="library" class="section">
     <div class="section-header">লাইব্রেরি</div>
     <input type="text" class="search-box" id="bookSearch" placeholder="বই খুঁজুন..." onkeyup="filterBooks()">
     <div class="filter-btns">
-      <button class="filter-btn active" onclick="filterCategory('all')">সব</button>
-      <button class="filter-btn" onclick="filterCategory('quran')">কোরআন</button>
-      <button class="filter-btn" onclick="filterCategory('hadis')">হাদিস</button>
-      <button class="filter-btn" onclick="filterCategory('fiqh')">ফিকহ</button>
-      <button class="filter-btn" onclick="filterCategory('story')">গল্প</button>
+      <button class="filter-btn active" onclick="filterCategory('all', this)">সব</button>
+      <button class="filter-btn" onclick="filterCategory('quran', this)">কোরআন</button>
+      <button class="filter-btn" onclick="filterCategory('hadis', this)">হাদিস</button>
+      <button class="filter-btn" onclick="filterCategory('fiqh', this)">ফিকহ</button>
+      <button class="filter-btn" onclick="filterCategory('story', this)">গল্প</button>
     </div>
     <div id="bookGrid" class="grid grid-2 grid-3"></div>
   </section>
 
-  <!-- Login -->
   <section id="login" class="section">
     <div class="section-header">লগইন / রেজিস্ট্রেশন</div>
     <div class="card" id="loginForm">
@@ -214,7 +217,6 @@ body {font-family: 'Noto Sans Bengali', sans-serif; background: #f5f7fa; color: 
       <button class="btn btn-block" onclick="login()">লগইন</button>
       <p class="text-center mt-2">একাউন্ট নেই? <a href="#" onclick="showRegister()" style="color:var(--primary-green);font-weight:600;">রেজিস্ট্রেশন করুন</a></p>
     </div>
-
     <div class="card hidden" id="registerForm">
       <div class="form-group"><label>নাম</label><input type="text" id="regName" placeholder="পূর্ণ নাম"></div>
       <div class="form-group"><label>রোল</label><input type="number" id="regRoll" placeholder="রোল নম্বর"></div>
@@ -235,18 +237,38 @@ body {font-family: 'Noto Sans Bengali', sans-serif; background: #f5f7fa; color: 
     </div>
   </section>
 
-  <!-- Admin Panel -->
   <section id="admin" class="section">
-    <div class="section-header">এডমিন প্যানেল</div>
+    <div class="section-header">এডমিন প্যানেল - Firebase সিকিউর</div>
     <div class="card" id="adminLogin">
-      <div class="form-group"><label>পাসওয়ার্ড</label><input type="password" id="adminPass" placeholder="এডমিন পাসওয়ার্ড"></div>
-      <button class="btn btn-block" onclick="adminLogin()">প্রবেশ</button>
+      <div id="admin-step-1">
+        <p class="text-center mb-4">এডমিন মোবাইল নাম্বার দিয়ে OTP লগইন</p>
+        <div class="form-group">
+          <label>এডমিন মোবাইল</label>
+          <input type="tel" id="adminPhone" placeholder="+8801712345678" value="+880">
+        </div>
+        <div id="recaptcha-container"></div>
+        <button class="btn btn-block" onclick="sendAdminOTP()">OTP পাঠাও</button>
+      </div>
+      <div id="admin-step-2" class="hidden">
+        <p class="text-center mb-4">মোবাইলে আসা ৬ ডিজিট OTP দাও</p>
+        <div class="form-group">
+          <input type="number" id="adminOtpCode" placeholder="123456">
+        </div>
+        <button class="btn btn-block" onclick="verifyAdminOTP()">ভেরিফাই করে ঢুকো</button>
+      </div>
+      <p id="admin-login-msg" class="text-center mt-2" style="color:red;"></p>
     </div>
     <div class="hidden" id="adminPanel">
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+          <h3 style="color:var(--primary-green);">✅ Firebase সিকিউর এডমিন</h3>
+          <button class="btn btn-gray" onclick="adminLogout()">লগআউট</button>
+        </div>
+        <p style="color:#666; margin-bottom:16px;">View Source করলেও পাসওয়ার্ড পাবে না।</p>
+      </div>
       <button class="btn btn-block" onclick="alert('নোটিশ যোগ করুন')">+ নোটিশ যোগ করুন</button>
       <button class="btn btn-block" onclick="alert('রেজাল্ট আপলোড')">+ রেজাল্ট আপলোড</button>
       <button class="btn btn-block" onclick="alert('বই আপলোড')">+ লাইব্রেরিতে বই যোগ</button>
-      <button class="btn btn-gray btn-block mt-2" onclick="adminLogout()">লগআউট</button>
     </div>
   </section>
 </main>
@@ -257,13 +279,13 @@ body {font-family: 'Noto Sans Bengali', sans-serif; background: #f5f7fa; color: 
 </footer>
 
 <script>
-// ডেটা
 const classes = {shishu: 'শিশু শ্রেণী', class1: 'প্রথম শ্রেণী', class2: 'দ্বিতীয় শ্রেণী', class3: 'তৃতীয় শ্রেণী'};
 const subjects = ['কোরআন মাজীদ ও তাজবীদ', 'কালিমা ও মাসায়েল', 'হাদিস শরীফ ও আসমাউল হুসনা', 'আদঃ মাসনুনাহ ও আদঃ সলাত', 'আরবি লেখা', 'ভূগোল সমাজ', 'বাংলা', 'ইংরেজি', 'গণিত', 'ইসলাম শিক্ষা'];
 const days = ['শনিবার', 'রবিবার', 'সোমবার', 'মঙ্গলবার', 'বুধবার', 'বৃহস্পতিবার'];
 let currentUser = null;
+let confirmationResult;
+let recaptchaVerifier;
 
-// ডেমো ডেটা
 const demoNotices = [
   {date: '২০ নভেম্বর, ২০২৪', title: 'বার্ষিক পরীক্ষা ২০২৪ এর রুটিন প্রকাশ', content: 'এতদ্বারা সকল ছাত্রছাত্রীদের জানানো যাচ্ছে যে, বার্ষিক পরীক্ষা ২০২৪ আগামী ১৫ ডিসেম্বর থেকে শুরু হবে।'},
   {date: '১৫ নভেম্বর, ২০২৪', title: 'ভর্তি কার্যক্রম ২০২৫', content: '২০২৫ শিক্ষাবর্ষে ভর্তি কার্যক্রম শুরু হয়েছে। বিস্তারিত অফিসে যোগাযোগ করুন।'}
@@ -277,14 +299,11 @@ const demoBooks = [
   {title: 'ছোটদের গল্প', author: 'নজরুল ইসলাম', category: 'story'}
 ];
 
-// নেভিগেশন
 document.querySelectorAll('.nav-link').forEach(link => {
   link.addEventListener('click', (e) => {
     e.preventDefault();
     const target = link.getAttribute('href').substring(1);
     showSection(target);
-    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-    link.classList.add('active');
   });
 });
 
@@ -292,10 +311,75 @@ function showSection(id) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   window.scrollTo(0, 0);
+  document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+  document.querySelector(`[href="#${id}"]`).classList.add('active');
 }
 
-// নোটিশ লোড
-function loadNotices() {
+window.showSection = showSection;
+
+window.sendAdminOTP = async function() {
+  const { auth, RecaptchaVerifier, signInWithPhoneNumber, ADMIN_PHONE } = window.firebaseApp;
+  const phone = document.getElementById('adminPhone').value;
+  const msg = document.getElementById('admin-login-msg');
+  
+  if (!recaptchaVerifier) {
+    recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', { 'size': 'normal' });
+  }
+  
+  if (phone!== ADMIN_PHONE) {
+    msg.innerText = 'এই নাম্বার এডমিন না';
+    return;
+  }
+  try {
+    msg.innerText = 'OTP পাঠানো হচ্ছে...';
+    msg.style.color = 'blue';
+    confirmationResult = await signInWithPhoneNumber(auth, phone, recaptchaVerifier);
+    document.getElementById('admin-step-1').classList.add('hidden');
+    document.getElementById('admin-step-2').classList.remove('hidden');
+    msg.innerText = 'OTP পাঠানো হয়েছে। মোবাইল চেক করো।';
+    msg.style.color = 'green';
+  } catch (error) {
+    msg.innerText = 'OTP পাঠানো যায়নি: ' + error.message;
+    msg.style.color = 'red';
+    if(recaptchaVerifier) {
+      recaptchaVerifier.render().then(widgetId => grecaptcha.reset(widgetId));
+    }
+  }
+}
+
+window.verifyAdminOTP = async function() {
+  const code = document.getElementById('adminOtpCode').value;
+  const msg = document.getElementById('admin-login-msg');
+  try {
+    await confirmationResult.confirm(code);
+    msg.innerText = 'লগইন সফল!';
+    msg.style.color = 'green';
+  } catch (error) {
+    msg.innerText = 'ভুল OTP';
+    msg.style.color = 'red';
+  }
+}
+
+window.adminLogout = function() {
+  const { auth, signOut } = window.firebaseApp;
+  signOut(auth);
+  document.getElementById('admin-step-1').classList.remove('hidden');
+  document.getElementById('admin-step-2').classList.add('hidden');
+  document.getElementById('adminOtpCode').value = '';
+}
+
+const { auth, onAuthStateChanged, ADMIN_PHONE } = window.firebaseApp;
+onAuthStateChanged(auth, (user) => {
+  if (user && user.phoneNumber === ADMIN_PHONE) {
+    document.getElementById('adminLogin').classList.add('hidden');
+    document.getElementById('adminPanel').classList.remove('hidden');
+  } else {
+    document.getElementById('adminLogin').classList.remove('hidden');
+    document.getElementById('adminPanel').classList.add('hidden');
+  }
+});
+
+window.loadNotices = function() {
   const html = demoNotices.map(n => `
     <div class="card">
       <small style="color:#666;">${n.date}</small>
@@ -306,8 +390,7 @@ function loadNotices() {
   document.getElementById('noticeList').innerHTML = html;
 }
 
-// রুটিন
-function showRoutine(type) {
+window.showRoutine = function(type) {
   document.getElementById('examRoutine').classList.add('hidden');
   document.getElementById('classRoutine').classList.add('hidden');
   if (type === 'exam') document.getElementById('examRoutine').classList.remove('hidden');
@@ -318,20 +401,20 @@ function showRoutine(type) {
         <span>${d}</span>
         <div>
           <button class="btn btn-blue" style="padding:6px 12px; font-size:14px;" onclick="alert('${d} এর রুটিন দেখুন')">দেখুন</button>
-          <button class="btn" style="padding:6px 12px; font-size:14px;" onclick="alert('${d} ডাউনলোড')">⬇️</button>
+          <button class="btn" style="padding:6px 12px; font-size:14px;" onclick="alert('${d} ডাউনলোড')">⬇</button>
         </div>
       </div>
     `).join('');
     document.getElementById('classRoutineDays').innerHTML = daysHtml;
   }
 }
-function hideRoutine() {
+
+window.hideRoutine = function() {
   document.getElementById('examRoutine').classList.add('hidden');
   document.getElementById('classRoutine').classList.add('hidden');
 }
 
-// সিলেবাস ও পরামর্শ
-function showClassList(type) {
+window.showClassList = function(type) {
   const container = document.getElementById(type + 'ClassList');
   const html = Object.entries(classes).map(([key, name]) => `
     <button class="btn btn-block" onclick="showSubjects('${type}', '${key}', '${name}')">👶 ${name}</button>
@@ -341,7 +424,7 @@ function showClassList(type) {
   document.getElementById(type + 'Subjects').classList.add('hidden');
 }
 
-function showSubjects(type, classKey, className) {
+window.showSubjects = function(type, classKey, className) {
   const container = document.getElementById(type + 'Subjects');
   const title = type === 'syllabus'? 'সিলেবাস' : 'পরামর্শ';
   const html = `
@@ -349,7 +432,7 @@ function showSubjects(type, classKey, className) {
     ${subjects.map(sub => `
       <div class="list-item">
         <span>${sub}</span>
-        <button class="btn btn-blue" style="padding:6px 12px; font-size:14px;" onclick="alert('${sub} এর ${title} ডাউনলোড হবে')">⬇️ ডাউনলোড</button>
+        <button class="btn btn-blue" style="padding:6px 12px; font-size:14px;" onclick="alert('${sub} এর ${title} ডাউনলোড হবে')">⬇ ডাউনলোড</button>
       </div>
     `).join('')}
     <button class="btn btn-gray btn-block mt-2" onclick="document.getElementById('${type}Subjects').classList.add('hidden')">← পিছনে যান</button>
@@ -358,8 +441,7 @@ function showSubjects(type, classKey, className) {
   container.classList.remove('hidden');
 }
 
-// রেজাল্ট
-function showResult() {
+window.showResult = function() {
   const cls = document.getElementById('resultClass').value;
   const exam = document.getElementById('examName').value;
   const roll = document.getElementById('rollNumber').value;
@@ -377,32 +459,33 @@ function showResult() {
         <tr><td style="padding:8px;border:1px solid #ddd;">গণিত</td><td style="padding:8px;border:1px solid #ddd;text-align:center;">92</td></tr>
         <tr style="background:#e8f5e9;font-weight:700;"><td style="padding:8px;border:1px solid #ddd;">মোট</td><td style="padding:8px;border:1px solid #ddd;text-align:center;">275</td></tr>
       </table>
-      <button class="btn btn-blue btn-block" onclick="alert('মার্কশিট PDF ডাউনলোড হবে')">⬇️ মার্কশিট ডাউনলোড</button>
+      <button class="btn btn-blue btn-block" onclick="alert('মার্কশিট PDF ডাউনলোড হবে')">⬇ মার্কশিট ডাউনলোড</button>
     </div>
   `;
   document.getElementById('resultDisplay').innerHTML = html;
   document.getElementById('resultDisplay').classList.remove('hidden');
 }
-function resetResult() {
+
+window.resetResult = function() {
   document.getElementById('resultClass').value = '';
   document.getElementById('examName').value = '';
   document.getElementById('rollNumber').value = '';
   document.getElementById('resultDisplay').classList.add('hidden');
 }
 
-// লাইব্রেরি
-function loadBooks() {
+window.loadBooks = function() {
   const html = demoBooks.map(b => `
-    <div class="card book-card">
+    <div class="card book-card" data-category="${b.category}">
       <div style="font-size:48px;">📚</div>
       <div class="book-title">${b.title}</div>
       <div class="book-author">লেখক: ${b.author}</div>
-      <button class="btn btn-block" onclick="alert('${b.title} ডাউনলোড হবে')">⬇️ ডাউনলোড</button>
+      <button class="btn btn-block" onclick="alert('${b.title} ডাউনলোড হবে')">⬇ ডাউনলোড</button>
     </div>
   `).join('');
   document.getElementById('bookGrid').innerHTML = html;
 }
-function filterBooks() {
+
+window.filterBooks = function() {
   const search = document.getElementById('bookSearch').value.toLowerCase();
   const cards = document.querySelectorAll('.book-card');
   cards.forEach(card => {
@@ -410,32 +493,35 @@ function filterBooks() {
     card.style.display = title.includes(search)? 'block' : 'none';
   });
 }
-function filterCategory(cat) {
+
+window.filterCategory = function(cat, btn) {
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  event.target.classList.add('active');
+  btn.classList.add('active');
   const cards = document.querySelectorAll('.book-card');
-  cards.forEach((card, i) => {
-    if (cat === 'all' || demoBooks[i].category === cat) card.style.display = 'block';
+  cards.forEach(card => {
+    if (cat === 'all' || card.dataset.category === cat) card.style.display = 'block';
     else card.style.display = 'none';
   });
 }
 
-// লগইন/রেজিস্টার
-function showRegister() {
+window.showRegister = function() {
   document.getElementById('loginForm').classList.add('hidden');
   document.getElementById('registerForm').classList.remove('hidden');
 }
-function showLogin() {
+
+window.showLogin = function() {
   document.getElementById('registerForm').classList.add('hidden');
   document.getElementById('loginForm').classList.remove('hidden');
 }
-function register() {
+
+window.register = function() {
   const mobile = document.getElementById('regMobile').value;
   if (!mobile || mobile.length!== 11) return alert('সঠিক মোবাইল নাম্বার দিন');
   alert('ডেমো: রেজিস্ট্রেশন সফল! OTP যাচাই হবে');
   showLogin();
 }
-function login() {
+
+window.login = function() {
   const mobile = document.getElementById('loginMobile').value;
   if (!mobile) return alert('মোবাইল নাম্বার দিন');
   alert('ডেমো: লগইন সফল!');
@@ -443,20 +529,6 @@ function login() {
   document.getElementById('loginMenuBtn').textContent = 'প্রোফাইল';
 }
 
-// এডমিন
-function adminLogin() {
-  if (document.getElementById('adminPass').value === 'admin@mizan197785') {
-    document.getElementById('adminLogin').classList.add('hidden');
-    document.getElementById('adminPanel').classList.remove('hidden');
-  } else alert('ভুল পাসওয়ার্ড');
-}
-function adminLogout() {
-  document.getElementById('adminPanel').classList.add('hidden');
-  document.getElementById('adminLogin').classList.remove('hidden');
-  document.getElementById('adminPass').value = '';
-}
-
-// ইনিট
 loadNotices();
 loadBooks();
 </script>
