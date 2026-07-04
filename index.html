@@ -79,6 +79,7 @@ body {font-family: 'Noto Sans Bengali', sans-serif; background: #f5f7fa; color: 
 .mt-2 {margin-top: 16px;}
 .list-item {padding: 12px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;}
 .list-item:last-child {border-bottom: none;}
+#recaptcha-container {margin: 10px 0;}
 </style>
 </head>
 <body>
@@ -134,6 +135,7 @@ body {font-family: 'Noto Sans Bengali', sans-serif; background: #f5f7fa; color: 
         <button class="btn btn-blue btn-block" onclick="alert('ডেমো: পরীক্ষার রুটিন PDF ডাউনলোড হবে')">⬇ পরীক্ষার রুটিন ডাউনলোড করুন</button>
         <button class="btn btn-gray btn-block mt-2" onclick="hideRoutine()">← পিছনে যান</button>
       </div>
+    </div>
     <div id="classRoutine" class="hidden mt-2">
       <div class="card">
         <h3 style="text-align:center; margin-bottom:16px;">ক্লাস রুটিন</h3>
@@ -297,15 +299,6 @@ const demoBooks = [
   {title: 'ছোটদের গল্প', author: 'নজরুল ইসলাম', category: 'story'}
 ];
 
-// সব ফাংশন window তে বসালাম
-window.showSection = function(id) {
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  window.scrollTo(0, 0);
-  document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-  document.querySelector(`[href="#${id}"]`).classList.add('active');
-}
-
 document.querySelectorAll('.nav-link').forEach(link => {
   link.addEventListener('click', (e) => {
     e.preventDefault();
@@ -313,6 +306,16 @@ document.querySelectorAll('.nav-link').forEach(link => {
     showSection(target);
   });
 });
+
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+  document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+  document.querySelector(`[href="#${id}"]`).classList.add('active');
+}
+
+window.showSection = showSection;
 
 window.sendAdminOTP = async function() {
   const { auth, RecaptchaVerifier, signInWithPhoneNumber, ADMIN_PHONE } = window.firebaseApp;
@@ -338,7 +341,9 @@ window.sendAdminOTP = async function() {
   } catch (error) {
     msg.innerText = 'OTP পাঠানো যায়নি: ' + error.message;
     msg.style.color = 'red';
-    recaptchaVerifier.render().then(widgetId => grecaptcha.reset(widgetId));
+    if(recaptchaVerifier) {
+      recaptchaVerifier.render().then(widgetId => grecaptcha.reset(widgetId));
+    }
   }
 }
 
@@ -524,7 +529,6 @@ window.login = function() {
   document.getElementById('loginMenuBtn').textContent = 'প্রোফাইল';
 }
 
-// ইনিট
 loadNotices();
 loadBooks();
 </script>
