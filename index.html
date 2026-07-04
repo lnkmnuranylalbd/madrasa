@@ -1,3 +1,4 @@
+HTML
 <!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -7,27 +8,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-<script type="module">
-  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-  import { getAuth, RecaptchaVerifier, signInWithPhoneNumber, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyBenny62B8sHCG8FlY-aAfv7eJUePkfQZs",
-    authDomain: "nurani-madrasa.firebaseapp.com",
-    projectId: "nurani-madrasa",
-    storageBucket: "nurani-madrasa.firebasestorage.app",
-    messagingSenderId: "520630157445",
-    appId: "1:520630157445:web:99f63ad70c1a97b6dd69ec"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const ADMIN_PHONE = "+8801714692986"; // এখানে তোমার নাম্বার দাও
-
-  window.firebaseApp = { auth, RecaptchaVerifier, signInWithPhoneNumber, onAuthStateChanged, signOut, ADMIN_PHONE };
-</script>
-
 <style>
 :root {
   --primary-green: #2e7d32;
@@ -65,9 +45,9 @@ body {font-family: 'Noto Sans Bengali', sans-serif; background: #f5f7fa; color: 
 @media (min-width: 1024px) {.grid-3 {grid-template-columns: repeat(3, 1fr);}}
 .form-group {margin-bottom: 16px;}
 .form-group label {display: block; margin-bottom: 6px; font-weight: 600; color: #424242;}
-.form-group input,.form-group select {width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 16px; font-family: 'Noto Sans Bengali';}
+.form-group input,.form-group select {width: 100%; padding: 12px; border: 2px solid #e0e0; border-radius: 8px; font-size: 16px; font-family: 'Noto Sans Bengali';}
 .form-group input:focus,.form-group select:focus {outline: none; border-color: var(--primary-green);}
-.search-box {width: 100%; padding: 12px 16px; border: 2px solid #e0e0e0; border-radius: 25px; margin-bottom: 16px; font-size: 16px;}
+.search-box {width: 100%; padding: 12px 16px; border: 2px solid #e0e0; border-radius: 25px; margin-bottom: 16px; font-size: 16px;}
 .filter-btns {display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px;}
 .filter-btn {padding: 8px 16px; border: 2px solid var(--primary-green); background: white; color: var(--primary-green); border-radius: 20px; cursor: pointer;}
 .filter-btn.active {background: var(--primary-green); color: white;}
@@ -79,7 +59,6 @@ body {font-family: 'Noto Sans Bengali', sans-serif; background: #f5f7fa; color: 
 .mt-2 {margin-top: 16px;}
 .list-item {padding: 12px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;}
 .list-item:last-child {border-bottom: none;}
-#recaptcha-container {margin: 10px 0;}
 </style>
 </head>
 <body>
@@ -94,7 +73,6 @@ body {font-family: 'Noto Sans Bengali', sans-serif; background: #f5f7fa; color: 
       </svg>
       <h1 class="school-name">লালমনিরহাট নেছারিয়া কামিল মাদ্রাসা<br>নূরানী শাখা</h1>
     </div>
-  </div>
   <nav class="nav">
     <div class="container">
       <ul class="nav-menu">
@@ -238,37 +216,16 @@ body {font-family: 'Noto Sans Bengali', sans-serif; background: #f5f7fa; color: 
   </section>
 
   <section id="admin" class="section">
-    <div class="section-header">এডমিন প্যানেল - Firebase সিকিউর</div>
+    <div class="section-header">এডমিন প্যানেল</div>
     <div class="card" id="adminLogin">
-      <div id="admin-step-1">
-        <p class="text-center mb-4">এডমিন মোবাইল নাম্বার দিয়ে OTP লগইন</p>
-        <div class="form-group">
-          <label>এডমিন মোবাইল</label>
-          <input type="tel" id="adminPhone" placeholder="+8801712345678" value="+880">
-        </div>
-        <div id="recaptcha-container"></div>
-        <button class="btn btn-block" onclick="sendAdminOTP()">OTP পাঠাও</button>
-      </div>
-      <div id="admin-step-2" class="hidden">
-        <p class="text-center mb-4">মোবাইলে আসা ৬ ডিজিট OTP দাও</p>
-        <div class="form-group">
-          <input type="number" id="adminOtpCode" placeholder="123456">
-        </div>
-        <button class="btn btn-block" onclick="verifyAdminOTP()">ভেরিফাই করে ঢুকো</button>
-      </div>
-      <p id="admin-login-msg" class="text-center mt-2" style="color:red;"></p>
+      <div class="form-group"><label>পাসওয়ার্ড</label><input type="password" id="adminPass" placeholder="এডমিন পাসওয়ার্ড"></div>
+      <button class="btn btn-block" onclick="adminLogin()">প্রবেশ</button>
     </div>
     <div class="hidden" id="adminPanel">
-      <div class="card">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-          <h3 style="color:var(--primary-green);">✅ Firebase সিকিউর এডমিন</h3>
-          <button class="btn btn-gray" onclick="adminLogout()">লগআউট</button>
-        </div>
-        <p style="color:#666; margin-bottom:16px;">View Source করলেও পাসওয়ার্ড পাবে না।</p>
-      </div>
       <button class="btn btn-block" onclick="alert('নোটিশ যোগ করুন')">+ নোটিশ যোগ করুন</button>
       <button class="btn btn-block" onclick="alert('রেজাল্ট আপলোড')">+ রেজাল্ট আপলোড</button>
       <button class="btn btn-block" onclick="alert('বই আপলোড')">+ লাইব্রেরিতে বই যোগ</button>
+      <button class="btn btn-gray btn-block mt-2" onclick="adminLogout()">লগআউট</button>
     </div>
   </section>
 </main>
@@ -283,8 +240,6 @@ const classes = {shishu: 'শিশু শ্রেণী', class1: 'প্র�
 const subjects = ['কোরআন মাজীদ ও তাজবীদ', 'কালিমা ও মাসায়েল', 'হাদিস শরীফ ও আসমাউল হুসনা', 'আদঃ মাসনুনাহ ও আদঃ সলাত', 'আরবি লেখা', 'ভূগোল সমাজ', 'বাংলা', 'ইংরেজি', 'গণিত', 'ইসলাম শিক্ষা'];
 const days = ['শনিবার', 'রবিবার', 'সোমবার', 'মঙ্গলবার', 'বুধবার', 'বৃহস্পতিবার'];
 let currentUser = null;
-let confirmationResult;
-let recaptchaVerifier;
 
 const demoNotices = [
   {date: '২০ নভেম্বর, ২০২৪', title: 'বার্ষিক পরীক্ষা ২০২৪ এর রুটিন প্রকাশ', content: 'এতদ্বারা সকল ছাত্রছাত্রীদের জানানো যাচ্ছে যে, বার্ষিক পরীক্ষা ২০২৪ আগামী ১৫ ডিসেম্বর থেকে শুরু হবে।'},
@@ -315,71 +270,7 @@ function showSection(id) {
   document.querySelector(`[href="#${id}"]`).classList.add('active');
 }
 
-window.showSection = showSection;
-
-window.sendAdminOTP = async function() {
-  const { auth, RecaptchaVerifier, signInWithPhoneNumber, ADMIN_PHONE } = window.firebaseApp;
-  const phone = document.getElementById('adminPhone').value;
-  const msg = document.getElementById('admin-login-msg');
-  
-  if (!recaptchaVerifier) {
-    recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', { 'size': 'normal' });
-  }
-  
-  if (phone!== ADMIN_PHONE) {
-    msg.innerText = 'এই নাম্বার এডমিন না';
-    return;
-  }
-  try {
-    msg.innerText = 'OTP পাঠানো হচ্ছে...';
-    msg.style.color = 'blue';
-    confirmationResult = await signInWithPhoneNumber(auth, phone, recaptchaVerifier);
-    document.getElementById('admin-step-1').classList.add('hidden');
-    document.getElementById('admin-step-2').classList.remove('hidden');
-    msg.innerText = 'OTP পাঠানো হয়েছে। মোবাইল চেক করো।';
-    msg.style.color = 'green';
-  } catch (error) {
-    msg.innerText = 'OTP পাঠানো যায়নি: ' + error.message;
-    msg.style.color = 'red';
-    if(recaptchaVerifier) {
-      recaptchaVerifier.render().then(widgetId => grecaptcha.reset(widgetId));
-    }
-  }
-}
-
-window.verifyAdminOTP = async function() {
-  const code = document.getElementById('adminOtpCode').value;
-  const msg = document.getElementById('admin-login-msg');
-  try {
-    await confirmationResult.confirm(code);
-    msg.innerText = 'লগইন সফল!';
-    msg.style.color = 'green';
-  } catch (error) {
-    msg.innerText = 'ভুল OTP';
-    msg.style.color = 'red';
-  }
-}
-
-window.adminLogout = function() {
-  const { auth, signOut } = window.firebaseApp;
-  signOut(auth);
-  document.getElementById('admin-step-1').classList.remove('hidden');
-  document.getElementById('admin-step-2').classList.add('hidden');
-  document.getElementById('adminOtpCode').value = '';
-}
-
-const { auth, onAuthStateChanged, ADMIN_PHONE } = window.firebaseApp;
-onAuthStateChanged(auth, (user) => {
-  if (user && user.phoneNumber === ADMIN_PHONE) {
-    document.getElementById('adminLogin').classList.add('hidden');
-    document.getElementById('adminPanel').classList.remove('hidden');
-  } else {
-    document.getElementById('adminLogin').classList.remove('hidden');
-    document.getElementById('adminPanel').classList.add('hidden');
-  }
-});
-
-window.loadNotices = function() {
+function loadNotices() {
   const html = demoNotices.map(n => `
     <div class="card">
       <small style="color:#666;">${n.date}</small>
@@ -390,7 +281,7 @@ window.loadNotices = function() {
   document.getElementById('noticeList').innerHTML = html;
 }
 
-window.showRoutine = function(type) {
+function showRoutine(type) {
   document.getElementById('examRoutine').classList.add('hidden');
   document.getElementById('classRoutine').classList.add('hidden');
   if (type === 'exam') document.getElementById('examRoutine').classList.remove('hidden');
@@ -409,12 +300,12 @@ window.showRoutine = function(type) {
   }
 }
 
-window.hideRoutine = function() {
+function hideRoutine() {
   document.getElementById('examRoutine').classList.add('hidden');
   document.getElementById('classRoutine').classList.add('hidden');
 }
 
-window.showClassList = function(type) {
+function showClassList(type) {
   const container = document.getElementById(type + 'ClassList');
   const html = Object.entries(classes).map(([key, name]) => `
     <button class="btn btn-block" onclick="showSubjects('${type}', '${key}', '${name}')">👶 ${name}</button>
@@ -424,7 +315,7 @@ window.showClassList = function(type) {
   document.getElementById(type + 'Subjects').classList.add('hidden');
 }
 
-window.showSubjects = function(type, classKey, className) {
+function showSubjects(type, classKey, className) {
   const container = document.getElementById(type + 'Subjects');
   const title = type === 'syllabus'? 'সিলেবাস' : 'পরামর্শ';
   const html = `
@@ -441,7 +332,7 @@ window.showSubjects = function(type, classKey, className) {
   container.classList.remove('hidden');
 }
 
-window.showResult = function() {
+function showResult() {
   const cls = document.getElementById('resultClass').value;
   const exam = document.getElementById('examName').value;
   const roll = document.getElementById('rollNumber').value;
@@ -466,14 +357,14 @@ window.showResult = function() {
   document.getElementById('resultDisplay').classList.remove('hidden');
 }
 
-window.resetResult = function() {
+function resetResult() {
   document.getElementById('resultClass').value = '';
   document.getElementById('examName').value = '';
   document.getElementById('rollNumber').value = '';
   document.getElementById('resultDisplay').classList.add('hidden');
 }
 
-window.loadBooks = function() {
+function loadBooks() {
   const html = demoBooks.map(b => `
     <div class="card book-card" data-category="${b.category}">
       <div style="font-size:48px;">📚</div>
@@ -485,7 +376,7 @@ window.loadBooks = function() {
   document.getElementById('bookGrid').innerHTML = html;
 }
 
-window.filterBooks = function() {
+function filterBooks() {
   const search = document.getElementById('bookSearch').value.toLowerCase();
   const cards = document.querySelectorAll('.book-card');
   cards.forEach(card => {
@@ -494,7 +385,7 @@ window.filterBooks = function() {
   });
 }
 
-window.filterCategory = function(cat, btn) {
+function filterCategory(cat, btn) {
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   const cards = document.querySelectorAll('.book-card');
@@ -504,29 +395,42 @@ window.filterCategory = function(cat, btn) {
   });
 }
 
-window.showRegister = function() {
+function showRegister() {
   document.getElementById('loginForm').classList.add('hidden');
   document.getElementById('registerForm').classList.remove('hidden');
 }
 
-window.showLogin = function() {
+function showLogin() {
   document.getElementById('registerForm').classList.add('hidden');
   document.getElementById('loginForm').classList.remove('hidden');
 }
 
-window.register = function() {
+function register() {
   const mobile = document.getElementById('regMobile').value;
   if (!mobile || mobile.length!== 11) return alert('সঠিক মোবাইল নাম্বার দিন');
   alert('ডেমো: রেজিস্ট্রেশন সফল! OTP যাচাই হবে');
   showLogin();
 }
 
-window.login = function() {
+function login() {
   const mobile = document.getElementById('loginMobile').value;
   if (!mobile) return alert('মোবাইল নাম্বার দিন');
   alert('ডেমো: লগইন সফল!');
   currentUser = mobile;
   document.getElementById('loginMenuBtn').textContent = 'প্রোফাইল';
+}
+
+function adminLogin() {
+  if (document.getElementById('adminPass').value === 'admin@mizan197785') {
+    document.getElementById('adminLogin').classList.add('hidden');
+    document.getElementById('adminPanel').classList.remove('hidden');
+  } else alert('ভুল পাসওয়ার্ড');
+}
+
+function adminLogout() {
+  document.getElementById('adminPanel').classList.add('hidden');
+  document.getElementById('adminLogin').classList.remove('hidden');
+  document.getElementById('adminPass').value = '';
 }
 
 loadNotices();
