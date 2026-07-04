@@ -24,7 +24,7 @@
 
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
-  const ADMIN_PHONE = "+8801714692986"; // এখানে তোমার নাম্বার দাও +880 সহ
+  const ADMIN_PHONE = "+8801714692986"; // তোমার এডমিন নাম্বার
 
   window.firebaseApp = { auth, RecaptchaVerifier, signInWithPhoneNumber, onAuthStateChanged, signOut, ADMIN_PHONE };
 </script>
@@ -35,6 +35,7 @@
   --primary-blue: #1565c0;
   --gray-btn: #616161;
   --orange: #ef6c00;
+  --yellow-highlight: #ffc107;
   --card-shadow: 0 4px 12px rgba(0,0,0,0.08);
   --radius: 12px;
 }
@@ -50,7 +51,7 @@ body {font-family: 'Noto Sans Bengali', sans-serif; background: #f5f7fa; color: 
 .nav {background: var(--primary-green); padding: 8px 0; position: sticky; top: 69px; z-index: 999;}
 .nav-menu {display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; list-style: none;}
 .nav-menu a {color: white; text-decoration: none; padding: 8px 16px; border-radius: 20px; font-weight: 500; transition: all 0.3s;}
-.nav-menu a:hover,.nav-menu a.active {background: rgba(255,255,0.2);}
+.nav-menu a:hover,.nav-menu a.active {background: var(--yellow-highlight); color: #212121; font-weight: 700;}
 .section {padding: 24px 0; display: none;}
 .section.active {display: block;}
 .section-header {background: var(--primary-blue); color: white; padding: 16px; border-radius: var(--radius); margin-bottom: 20px; text-align: center; font-size: 22px; font-weight: 700;}
@@ -66,7 +67,7 @@ body {font-family: 'Noto Sans Bengali', sans-serif; background: #f5f7fa; color: 
 @media (min-width: 1024px) {.grid-3 {grid-template-columns: repeat(3, 1fr);}}
 .form-group {margin-bottom: 16px;}
 .form-group label {display: block; margin-bottom: 6px; font-weight: 600; color: #424242;}
-.form-group input,.form-group select {width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 16px; font-family: 'Noto Sans Bengali';}
+.form-group input,.form-group select {width: 100%; padding: 12px; border: 2px solid #e0e0; border-radius: 8px; font-size: 16px; font-family: 'Noto Sans Bengali';}
 .form-group input:focus,.form-group select:focus {outline: none; border-color: var(--primary-green);}
 .search-box {width: 100%; padding: 12px 16px; border: 2px solid #e0e0; border-radius: 25px; margin-bottom: 16px; font-size: 16px;}
 .filter-btns {display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px;}
@@ -131,13 +132,13 @@ body {font-family: 'Noto Sans Bengali', sans-serif; background: #f5f7fa; color: 
     <button class="btn btn-block" onclick="showRoutine('class')">📚 ক্লাস রুটিন</button>
     <div id="examRoutine" class="hidden mt-2">
       <div class="card">
-        <h3 style="text-align:center; margin-bottom:16px;">পরীক্ষার রুটিন</h3>
-        <button class="btn btn-blue btn-block" onclick="alert('ডেমো: পরীক্ষার রুটিন PDF ডাউনলোড হবে')">⬇ পরীক্ষার রুটিন ডাউনলোড করুন</button>
+        <h3 style="text-align:center; margin-bottom:16px;">পরীক্ষার রুটিন - ২০২৬</h3>
+        <div id="examRoutineList"></div>
         <button class="btn btn-gray btn-block mt-2" onclick="hideRoutine()">← পিছনে যান</button>
       </div>
     <div id="classRoutine" class="hidden mt-2">
       <div class="card">
-        <h3 style="text-align:center; margin-bottom:16px;">ক্লাস রুটিন</h3>
+        <h3 style="text-align:center; margin-bottom:16px;">ক্লাস রুটিন - ২০২৬</h3>
         <div id="classRoutineDays"></div>
         <button class="btn btn-gray btn-block mt-2" onclick="hideRoutine()">← পিছনে যান</button>
       </div>
@@ -175,8 +176,10 @@ body {font-family: 'Noto Sans Bengali', sans-serif; background: #f5f7fa; color: 
         <label>পরীক্ষার নাম</label>
         <select id="examName">
           <option value="">নির্বাচন করুন</option>
-          <option value="annual">বার্ষিক পরীক্ষা ২০২৪</option>
-          <option value="half">অর্ধ-বার্ষিক পরীক্ষা ২০২৪</option>
+          <option value="monthly">মাসিক পরীক্ষা</option>
+          <option value="first">১ম সাময়িক পরীক্ষা ২০২৬</option>
+          <option value="second">২য় সাময়িক পরীক্ষা ২০২৬</option>
+          <option value="annual">বার্ষিক পরীক্ষা ২০২৬</option>
         </select>
       </div>
       <div class="form-group">
@@ -198,6 +201,7 @@ body {font-family: 'Noto Sans Bengali', sans-serif; background: #f5f7fa; color: 
       <button class="filter-btn" onclick="filterCategory('hadis', this)">হাদিস</button>
       <button class="filter-btn" onclick="filterCategory('fiqh', this)">ফিকহ</button>
       <button class="filter-btn" onclick="filterCategory('story', this)">গল্প</button>
+      <button class="filter-btn" onclick="filterCategory('bangla', this)">বাংলা</button>
     </div>
     <div id="bookGrid" class="grid grid-2 grid-3"></div>
   </section>
@@ -243,7 +247,7 @@ body {font-family: 'Noto Sans Bengali', sans-serif; background: #f5f7fa; color: 
         <p class="text-center mb-4">এডমিন মোবাইল নাম্বার দিয়ে OTP লগইন</p>
         <div class="form-group">
           <label>এডমিন মোবাইল</label>
-          <input type="tel" id="adminPhone" placeholder="+8801712345678" value="+880">
+          <input type="tel" id="adminPhone" placeholder="+8801714692986" value="+8801714692986">
         </div>
         <div id="recaptcha-container"></div>
         <button class="btn btn-block" onclick="sendAdminOTP()">OTP পাঠাও</button>
@@ -273,7 +277,7 @@ body {font-family: 'Noto Sans Bengali', sans-serif; background: #f5f7fa; color: 
 </main>
 
 <footer style="text-align:center; padding:20px; color:#666; font-size:14px;">
-  <p>© ২০২৪ লালমনিরহাট নেছারিয়া কামিল মাদ্রাসা নূরানী শাখা</p>
+  <p>© ২০২৬ লালমনিরহাট নেছারিয়া কামিল মাদ্রাসা নূরানী শাখা</p>
   <p><a href="#admin" onclick="showSection('admin')" style="color:#999;">এডমিন</a></p>
 </footer>
 
@@ -281,21 +285,34 @@ body {font-family: 'Noto Sans Bengali', sans-serif; background: #f5f7fa; color: 
 const classes = {shishu: 'শিশু শ্রেণী', class1: 'প্রথম শ্রেণী', class2: 'দ্বিতীয় শ্রেণী', class3: 'তৃতীয় শ্রেণী'};
 const subjects = ['কোরআন মাজীদ ও তাজবীদ', 'কালিমা ও মাসায়েল', 'হাদিস শরীফ ও আসমাউল হুসনা', 'আদঃ মাসনুনাহ ও আদঃ সলাত', 'আরবি লেখা', 'ভূগোল সমাজ', 'বাংলা', 'ইংরেজি', 'গণিত', 'ইসলাম শিক্ষা'];
 const days = ['শনিবার', 'রবিবার', 'সোমবার', 'মঙ্গলবার', 'বুধবার', 'বৃহস্পতিবার'];
+const exams = [
+  {key: 'monthly', name: 'মাসিক পরীক্ষা'},
+  {key: 'first', name: '১ম সাময়িক পরীক্ষা ২০২৬'},
+  {key: 'second', name: '২য় সাময়িক পরীক্ষা ২০২৬'},
+  {key: 'annual', name: 'বার্ষিক পরীক্ষা ২০২৬'}
+];
 let currentUser = null;
 let confirmationResult;
 let recaptchaVerifier;
 
 const demoNotices = [
-  {date: '২০ নভেম্বর, ২০২৪', title: 'বার্ষিক পরীক্ষা ২০২৪ এর রুটিন প্রকাশ', content: 'এতদ্বারা সকল ছাত্রছাত্রীদের জানানো যাচ্ছে যে, বার্ষিক পরীক্ষা ২০২৪ আগামী ১৫ ডিসেম্বর থেকে শুরু হবে।'},
-  {date: '১৫ নভেম্বর, ২০২৪', title: 'ভর্তি কার্যক্রম ২০২৫', content: '২০২৫ শিক্ষাবর্ষে ভর্তি কার্যক্রম শুরু হয়েছে। বিস্তারিত অফিসে যোগাযোগ করুন।'}
+  {date: '১৫ জানুয়ারি, ২০২৬', title: 'মাসিক পরীক্ষা ২০২৬ এর রুটিন প্রকাশ', content: 'এতদ্বারা সকল ছাত্রছাত্রীদের জানানো যাচ্ছে যে, মাসিক পরীক্ষা ২০২৬ আগামী ২৫ জানুয়ারি থেকে শুরু হবে।'},
+  {date: '১০ জানুয়ারি, ২০২৬', title: 'শীতকালীন ছুটি', content: 'আগামী ১২-১৬ জানুয়ারি পর্যন্ত মাদ্রাসা বন্ধ থাকবে।'},
+  {date: '০৫ জানুয়ারি, ২০২৬', title: 'ভর্তি কার্যক্রম ২০২৬', content: '২০২৬ শিক্ষাবর্ষে ভর্তি কার্যক্রম চলছে। বিস্তারিত অফিসে যোগাযোগ করুন।'},
+  {date: '০১ জানুয়ারি, ২০২৬', title: 'নববর্ষের শুভেচ্ছা', content: 'সকল ছাত্র-শিক্ষককে নতুন বছরের শুভেচ্ছা। ক্লাস শুরু ২ জানুয়ারি থেকে।'}
 ];
 
 const demoBooks = [
   {title: 'কোরআন মাজীদ', author: 'ইসলামিক ফাউন্ডেশন', category: 'quran'},
-  {title: 'বুখারী শরীফ', author: 'ইমাম বুখারী', category: 'hadis'},
+  {title: 'তাজবীদ শিক্ষা', author: 'মাওলানা কারী বেলায়েত', category: 'quran'},
+  {title: 'বুখারী শরীফ ১ম খণ্ড', author: 'ইমাম বুখারী', category: 'hadis'},
+  {title: 'মুসলিম শরীফ', author: 'ইমাম মুসলিম', category: 'hadis'},
   {title: 'ফিকহুল আকবার', author: 'ইমাম আবু হানিফা', category: 'fiqh'},
-  {title: 'আদর্শ মুসলিম', author: 'ড. মুস্তফা', category: 'story'},
-  {title: 'ছোটদের গল্প', author: 'নজরুল ইসলাম', category: 'story'}
+  {title: 'নামাজ শিক্ষা', author: 'মাওলানা আশরাফ আলী', category: 'fiqh'},
+  {title: 'আদর্শ মুসলিম', author: 'ড. মুস্তফা আস-সিবাঈ', category: 'story'},
+  {title: 'ছোটদের গল্প', author: 'কাজী নজরুল ইসলাম', category: 'story'},
+  {title: 'আমার বাংলা বই', author: 'NCTB', category: 'bangla'},
+  {title: 'English For Today', author: 'NCTB', category: 'bangla'}
 ];
 
 document.querySelectorAll('.nav-link').forEach(link => {
@@ -324,7 +341,7 @@ window.sendAdminOTP = async function() {
     recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', { 'size': 'normal' });
   }
   
-  if (phone!== ADMIN_PHONE) {
+  if (phone !== ADMIN_PHONE) {
     msg.innerText = 'এই নাম্বার এডমিন না';
     return;
   }
@@ -392,8 +409,19 @@ window.loadNotices = loadNotices;
 function showRoutine(type) {
   document.getElementById('examRoutine').classList.add('hidden');
   document.getElementById('classRoutine').classList.add('hidden');
-  if (type === 'exam') document.getElementById('examRoutine').classList.remove('hidden');
-  else {
+  if (type === 'exam') {
+    document.getElementById('examRoutine').classList.remove('hidden');
+    const examHtml = exams.map(e => `
+      <div class="list-item">
+        <span>${e.name}</span>
+        <div>
+          <button class="btn btn-blue" style="padding:6px 12px; font-size:14px;" onclick="alert('${e.name} দেখুন')">দেখুন</button>
+          <button class="btn" style="padding:6px 12px; font-size:14px;" onclick="alert('${e.name} ডাউনলোড')">⬇</button>
+        </div>
+      </div>
+    `).join('');
+    document.getElementById('examRoutineList').innerHTML = examHtml;
+  } else {
     document.getElementById('classRoutine').classList.remove('hidden');
     const daysHtml = days.map(d => `
       <div class="list-item">
@@ -428,7 +456,7 @@ window.showClassList = showClassList;
 
 function showSubjects(type, classKey, className) {
   const container = document.getElementById(type + 'Subjects');
-  const title = type === 'syllabus'? 'সিলেবাস' : 'পরামর্শ';
+  const title = type === 'syllabus' ? 'সিলেবাস ২০২৬' : 'পরামর্শ ২০২৬';
   const html = `
     <h3 style="text-align:center; margin-bottom:16px;">${className} - ${title}</h3>
     ${subjects.map(sub => `
@@ -448,15 +476,16 @@ function showResult() {
   const cls = document.getElementById('resultClass').value;
   const exam = document.getElementById('examName').value;
   const roll = document.getElementById('rollNumber').value;
-  if (!cls ||!exam ||!roll) return alert('সব তথ্য দিন');
+  if (!cls || !exam || !roll) return alert('সব তথ্য দিন');
+  const examText = document.querySelector(`#examName option[value="${exam}"]`).textContent;
   const html = `
     <div class="card">
-      <h3 style="text-align:center; color:var(--primary-green);">মার্কশিট</h3>
+      <h3 style="text-align:center; color:var(--primary-green);">মার্কশিট - ${examText}</h3>
       <p><b>নাম:</b> মোঃ করিম উদ্দিন</p>
       <p><b>রোল:</b> ${roll}</p>
       <p><b>শ্রেণী:</b> ${classes[cls]}</p>
       <table style="width:100%; margin:16px 0; border-collapse:collapse;">
-        <tr style="background:#f5f5;"><th style="padding:8px;border:1px solid #ddd;">বিষয়</th><th style="padding:8px;border:1px solid #ddd;">নম্বর</th></tr>
+        <tr style="background:#f5f5f5;"><th style="padding:8px;border:1px solid #ddd;">বিষয়</th><th style="padding:8px;border:1px solid #ddd;">নম্বর</th></tr>
         <tr><td style="padding:8px;border:1px solid #ddd;">কোরআন মাজীদ</td><td style="padding:8px;border:1px solid #ddd;text-align:center;">95</td></tr>
         <tr><td style="padding:8px;border:1px solid #ddd;">বাংলা</td><td style="padding:8px;border:1px solid #ddd;text-align:center;">88</td></tr>
         <tr><td style="padding:8px;border:1px solid #ddd;">গণিত</td><td style="padding:8px;border:1px solid #ddd;text-align:center;">92</td></tr>
@@ -496,68 +525,10 @@ function filterBooks() {
   const cards = document.querySelectorAll('.book-card');
   cards.forEach(card => {
     const title = card.querySelector('.book-title').textContent.toLowerCase();
-    card.style.display = title.includes(search)? 'block' : 'none';
+    card.style.display = title.includes(search) ? 'block' : 'none';
   });
 }
 window.filterBooks = filterBooks;
 
 function filterCategory(cat, btn) {
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  const cards = document.querySelectorAll('.book-card');
-  cards.forEach(card => {
-    if (cat === 'all' || card.dataset.category === cat) card.style.display = 'block';
-    else card.style.display = 'none';
-  });
-}
-window.filterCategory = filterCategory;
-
-function showRegister() {
-  document.getElementById('loginForm').classList.add('hidden');
-  document.getElementById('registerForm').classList.remove('hidden');
-}
-window.showRegister = showRegister;
-
-function showLogin() {
-  document.getElementById('registerForm').classList.add('hidden');
-  document.getElementById('loginForm').classList.remove('hidden');
-}
-window.showLogin = showLogin;
-
-function register() {
-  const mobile = document.getElementById('regMobile').value;
-  if (!mobile || mobile.length!== 11) return alert('সঠিক মোবাইল নাম্বার দিন');
-  alert('ডেমো: রেজিস্ট্রেশন সফল! OTP যাচাই হবে');
-  showLogin();
-}
-window.register = register;
-
-function login() {
-  const mobile = document.getElementById('loginMobile').value;
-  if (!mobile) return alert('মোবাইল নাম্বার দিন');
-  alert('ডেমো: লগইন সফল!');
-  currentUser = mobile;
-  document.getElementById('loginMenuBtn').textContent = 'প্রোফাইল';
-}
-window.login = login;
-
-function adminLogin() {
-  if (document.getElementById('adminPass').value === 'admin@mizan197785') {
-    document.getElementById('adminLogin').classList.add('hidden');
-    document.getElementById('adminPanel').classList.remove('hidden');
-  } else alert('ভুল পাসওয়ার্ড');
-}
-window.adminLogin = adminLogin;
-
-function adminLogout() {
-  document.getElementById('adminPanel').classList.add('hidden');
-  document.getElementById('adminLogin').classList.remove('hidden');
-  document.getElementById('adminPass').value = '';
-}
-window.adminLogout = adminLogout;
-
-loadNotices();
-loadBooks();
-</script>
-</body>
-</html>
+  document
